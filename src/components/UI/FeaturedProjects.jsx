@@ -149,14 +149,14 @@ const FeaturedProjects = () => {
                   height: '105%',
                   objectFit: 'cover'
                 }}
-                className="transition-transform duration-700 group-hover:scale-105 z-0"
+                className="transition-transform duration-705 group-hover:scale-105 z-0"
                 loading="lazy"
               />
 
               {/* Exact Hover Overlay Layout and Style from the Main Project */}
               <div 
                 style={hoverBgGradient}
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 p-6 flex flex-col justify-between text-white"
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-305 z-20 p-6 flex flex-col justify-between text-white"
               >
                 <div className="w-full">
                   <div className="flex justify-between items-start w-full">
@@ -177,8 +177,8 @@ const FeaturedProjects = () => {
                 </div>
               </div>
 
-              {/* bottom label with glassmorphism (layered on top of fill image) */}
-              <div className="absolute bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-md border-t border-white/20 flex justify-between items-center z-10">
+              {/* bottom label with glassmorphism (layered on top of fill image, hides on hover) */}
+              <div className="absolute bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-md border-t border-white/20 flex justify-between items-center z-10 group-hover:opacity-0 group-hover:pointer-events-none transition-all duration-300">
                 <div className="flex flex-col gap-1">
                   <h3 className="text-xl font-bold text-gray-900">{project.name}</h3>
                   <p className="text-sm text-gray-600 font-medium">{project.location}</p>
