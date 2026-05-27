@@ -70,6 +70,7 @@ const ContactForm = ({ isOpen, onClose }) => {
                     type="text"
                     name="name"
                     placeholder="Full Name"
+                    aria-label="Full Name"
                     required
                     value={formData.name}
                     onChange={handleChange}
@@ -81,6 +82,7 @@ const ContactForm = ({ isOpen, onClose }) => {
                     type="email"
                     name="email"
                     placeholder="Email Address"
+                    aria-label="Email Address"
                     required
                     value={formData.email}
                     onChange={handleChange}
@@ -93,6 +95,7 @@ const ContactForm = ({ isOpen, onClose }) => {
                 <div className="space-y-1">
                   <select
                     name="service"
+                    aria-label="Select Service"
                     required
                     value={formData.service}
                     onChange={handleChange}
@@ -113,6 +116,7 @@ const ContactForm = ({ isOpen, onClose }) => {
                     type="tel"
                     name="phone"
                     placeholder="Contact Number"
+                    aria-label="Contact Number"
                     required
                     pattern="[0-9]{7,15}"
                     value={formData.phone}
@@ -126,6 +130,7 @@ const ContactForm = ({ isOpen, onClose }) => {
                 <textarea
                   name="message"
                   placeholder="Tell us about your project"
+                  aria-label="Tell us about your project"
                   required
                   rows="4"
                   value={formData.message}

@@ -60,12 +60,13 @@ const Footer = () => {
           <img
             src={`${import.meta.env.BASE_URL}images/NEW LOGOS/FOOTERLOGO.svg`}
             style={{ height: '48px', width: 'auto', display: 'block' }}
-            alt="logo footer"
+            alt="HTL Aircon logo footer"
           />
           <object
-            data={`${import.meta.env.BASE_URL}images/Logo/iso.svg`}
+            data={`${import.meta.env.BASE_URL}images/logo/iso.svg`}
             type="image/svg+xml"
             height="48px"
+            title="ISO Certification Logo"
           ></object>
         </div>
         <div className="right">
