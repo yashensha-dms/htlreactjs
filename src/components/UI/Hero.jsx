@@ -148,7 +148,7 @@ const Hero = ({ sanityData }) => {
             Delivering integrated MEP services, powering India’s Real Estate with Engineering, supply chain & management solutions.
           </motion.p>
           <motion.div variants={itemVariants}>
-            <Button variant="primary" size="lg" className="w-full sm:w-auto shadow-lg hover:shadow-brand-red/25 transition-all">
+            <Button variant="primary" size="lg" fullWidth>
               Explore Capabilities
             </Button>
           </motion.div>
