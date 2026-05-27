@@ -3,12 +3,12 @@ import Hero from './UI/Hero';
 import ServiceExcellence from './UI/ServiceExcellence';
 import FeaturedProjects from './UI/FeaturedProjects';
 
-const Home = ({ sanityData }) => {
+const Home = ({ sanityData, projects }) => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-primary">
       <Hero sanityData={sanityData} />
       <ServiceExcellence />
-      <FeaturedProjects />
+      <FeaturedProjects projects={projects} />
     </div>
   );
 };

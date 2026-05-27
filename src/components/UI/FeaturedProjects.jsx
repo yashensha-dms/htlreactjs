@@ -7,55 +7,13 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const projects = [
-  {
-    name: "Microsoft",
-    location: "Hyderbad",
-    service: "Fitout",
-    area: "1.4L Sq.Ft.",
-    image: "/images/projects/home-projects/Microsoft.webp",
-    description: "Delivered advanced fitout for Microsoft’s 140,000 sq.ft. Hyderabad office, empowering a global technology leader with sophisticated, high-performance workspace built for efficiency and innovation."
-  },
-  {
-    name: "Qualcomm",
-    location: "Bangalore & HYD",
-    service: "HVAC",
-    area: "11L Sq.Ft.",
-    image: "/images/projects/home-projects/Qualcomm.webp",
-    description: "We delivered VRV and fitout HVAC systems across 11,40,000 sq.ft. for Qualcomm, a global leader in semiconductor and telecommunications technology, in Bangalore and Hyderabad."
-  },
-  {
-    name: "Foxconn",
-    location: "Bangalore",
-    service: "MEP",
-    area: "0.8M Sq.Ft.",
-    image: "/images/projects/home-projects/Foxconn.webp",
-    description: "Delivered advanced MEP solutions for Foxconn’s 0.8 million sq.ft. Bangalore manufacturing facility, empowering the world’s largest electronics manufacturer with scalable, high-efficiency infrastructure."
-  },
-  {
-    name: "Giga Factory",
-    location: "Gujrat",
-    service: "HVAC",
-    area: "0.8M Sq.Ft.",
-    image: "/images/projects/home-projects/Giga factory.webp",
-    description: "Cleanroom-grade MEP systems executed across 8 lakh sq.ft. in Jamnagar for India’s largest 5 GW solar PV manufacturing facility, delivering scalable, high-efficiency infrastructure."
-  },
-  {
-    name: "Ctrl S",
-    location: "Mumbai",
-    service: "MEP",
-    area: "4.5L Sq.Ft",
-    image: "/images/projects/all projects/All Images/CtrlS-Mumbai-Phase-II-Datacenter-which-was-built-in-a-record-time-of-120-days-1.jpg",
-    description: "Tier 4 Hyperscaler DC infrastructure delivered across 7 phases for Asia's Largest Data Centre Provider"
-  }
-];
-
 // Lightened black linear/radial gradient overlay
 const hoverBgGradient = {
   background: 'linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.65) 82%, rgba(0, 0, 0, 0.75) 100%), radial-gradient(50% 50% at 50% 50%, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.18) 49%, rgba(0, 0, 0, 0.38) 66%, rgba(0, 0, 0, 0.55) 105%)'
 };
 
-const FeaturedProjects = () => {
+const FeaturedProjects = ({ projects = [] }) => {
+  const displayProjects = projects;
   const sectionRef = useRef(null);
   const containerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -130,7 +88,7 @@ const FeaturedProjects = () => {
           ref={containerRef}
           className="flex gap-8 pl-5 md:pl-20 pr-5 md:pr-20 w-max"
         >
-          {projects.map((project, index) => (
+          {displayProjects.map((project, index) => (
             <motion.div
               key={index}
               className="featured-project-card-new flex-shrink-0 relative w-[300px] sm:w-[425px] h-[450px] sm:h-[540px] rounded-2xl bg-white shadow-[0px_2px_8px_rgba(0,0,0,0.06),_0px_10px_20px_rgba(0,0,0,0.04),_0px_20px_35px_rgba(0,0,0,0.03)] group overflow-hidden"

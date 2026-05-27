@@ -3,11 +3,27 @@ import Layout from '../layouts/Layout.astro';
 import Home from '../components/Home.jsx';
 import { sanityClient } from '../sanity/client';
 
-// Attempt to fetch homepage settings from Sanity (with a safe fallback if credentials aren't set yet)
+// Attempt to fetch homepage settings and featured projects from Sanity
 let sanityData = null;
+let featuredProjects = [];
+
 try {
-  sanityData = await sanityClient.fetch(`*[_type == "siteSettings"][0]`);
-  console.log("SANITY DATA FETCHED:", JSON.stringify(sanityData, null, 2));
+  sanityData = await sanityClient.fetch(`*[_type == "siteSettings"][0]{
+    title,
+    description,
+    metrics,
+    featuredProjects[]->{
+      name,
+      location,
+      service,
+      area,
+      description,
+      "image": image.asset->url,
+      sector
+    }
+  }`);
+  featuredProjects = sanityData?.featuredProjects || [];
+  console.log(`FETCHED ${featuredProjects.length} FEATURED PROJECTS FROM SANITY via siteSettings`);
 } catch (error) {
   console.warn("Sanity fetch failed:", error);
 }
@@ -16,5 +32,5 @@ const title = sanityData?.title || "HTL Aircon";
 ---
 
 <Layout title={title}>
-  <Home client:load sanityData={sanityData} />
+  <Home client:load sanityData={sanityData} projects={featuredProjects} />
 </Layout>

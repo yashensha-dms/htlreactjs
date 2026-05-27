@@ -29,6 +29,19 @@ export default {
           ]
         }
       ]
+    },
+    {
+      name: 'featuredProjects',
+      title: 'Featured Projects',
+      description: 'Select and order up to 5 projects to showcase on the homepage carousel.',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'project' }]
+        }
+      ],
+      validation: Rule => Rule.max(5)
     }
   ],
 };
