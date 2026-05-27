@@ -1,6 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import './Footer.css';
+
+const Link = ({ to, children, className = '', ...props }) => {
+  return (
+    <a href={to} className={className} {...props}>
+      {children}
+    </a>
+  );
+};
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();

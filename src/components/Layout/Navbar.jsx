@@ -1,22 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
+import { Drawer } from 'vaul';
 import './Navbar.css';
+
+const Link = ({ to, children, className = '', ...props }) => {
+  return (
+    <a href={to} className={className} {...props}>
+      {children}
+    </a>
+  );
+};
 
 const NavLink = ({ to, children, className = '', disabled, ...props }) => {
   return (
-    <Link to={disabled ? '#' : to} className={`link-box ${disabled ? 'disabled' : ''} ${className}`} {...props}>
+    <a href={disabled ? '#' : to} className={`link-box ${disabled ? 'disabled' : ''} ${className}`} {...props}>
       {children}
-    </Link>
+    </a>
   );
 };
 
 const Navbar = () => {
   const [isDesktopExpanded, setIsDesktopExpanded] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobileHamburgerActive, setIsMobileHamburgerActive] = useState(false);
   const [activeMobileDropdown, setActiveMobileDropdown] = useState(null);
-  const { pathname } = useLocation();
+  const [pathname, setPathname] = useState(typeof window !== 'undefined' ? window.location.pathname : '');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setPathname(window.location.pathname);
+    }
+  }, []);
 
   const menuToggle = useRef(null);
 
@@ -55,36 +68,23 @@ const Navbar = () => {
     };
   }, []);
 
+  // Close menus on route change
   useEffect(() => {
     setIsDesktopExpanded(false);
     setIsMobileMenuOpen(false);
-    setIsMobileHamburgerActive(false);
     setActiveMobileDropdown(null);
-    gsap.set("#mobileNavbar", { clearProps: "height" });
     if (menuToggle.current && !menuToggle.current.reversed()) {
       menuToggle.current.reverse();
     }
     if (window.lenis) window.lenis.start();
   }, [pathname]);
 
-  // GSAP animation for mobile menu entrance
+  // Handle scroll lock with Lenis on mobile menu open
   useEffect(() => {
     if (isMobileMenuOpen) {
-      gsap.fromTo(".mobile-menu", 
-        { opacity: 0, y: -10 },
-        { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }
-      );
-      gsap.fromTo(".mobile-dropdown", 
-        { opacity: 0, y: 15 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          duration: 0.4, 
-          stagger: 0.08, 
-          ease: "power2.out",
-          delay: 0.05 
-        }
-      );
+      if (window.lenis) window.lenis.stop();
+    } else {
+      if (window.lenis) window.lenis.start();
     }
   }, [isMobileMenuOpen]);
 
@@ -111,38 +111,6 @@ const Navbar = () => {
     } else {
       menuToggle.current.reverse();
       if (window.lenis) window.lenis.start();
-    }
-  };
-
-  const toggleMobileNav = () => {
-    if (!isMobileMenuOpen) {
-      // Opening
-      setIsMobileMenuOpen(true);
-      setIsMobileHamburgerActive(true);
-      if (window.lenis) window.lenis.stop();
-      
-      const startHeight = window.innerWidth <= 480 ? "65px" : "70px";
-      gsap.fromTo("#mobileNavbar", 
-        { height: startHeight },
-        { height: "100vh", duration: 0.45, ease: "power3.out" }
-      );
-    } else {
-      // Closing
-      setIsMobileHamburgerActive(false);
-      setActiveMobileDropdown(null);
-      
-      const targetHeight = window.innerWidth <= 480 ? "65px" : "70px";
-      gsap.to("#mobileNavbar", {
-        height: targetHeight,
-        duration: 0.4,
-        ease: "power3.inOut",
-        onComplete: () => {
-          setIsMobileMenuOpen(false);
-          if (window.lenis) window.lenis.start();
-          // Clear GSAP inline height style so it doesn't lock sticky height
-          gsap.set("#mobileNavbar", { clearProps: "height" });
-        }
-      });
     }
   };
 
@@ -233,7 +201,7 @@ const Navbar = () => {
       </nav>
 
       {/* MOBILE NAV */}
-      <nav className={`mobile-navbar ${isMobileMenuOpen ? 'menu-active' : ''}`} id="mobileNavbar">
+      <nav className="mobile-navbar" id="mobileNavbar">
         <div className="mobile-nav-header">
           <div className="mobile-brand">
             <Link to="/">
@@ -241,70 +209,99 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <div className={`mobile-menu-toggle ${isMobileHamburgerActive ? 'active' : ''}`} id="mobileMenuToggle" onClick={toggleMobileNav}>
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 56 46"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              className="mobile-burger"
-            >
-              <rect className="mobile-top" y="9" width="48" height="6" fill="white" />
-              <rect className="mobile-bot" y="29" width="48" height="6" fill="white" />
-            </svg>
-          </div>
-        </div>
-
-        <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : ''}`} id="mobileMenu">
-          <div className="mobile-dropdown">
-            <button className={`dropdown-btn ${activeMobileDropdown === 0 ? 'active' : ''}`} onClick={() => toggleMobileDropdown(0)}>
-              Company
-              <svg className="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div className={`dropdown-content ${activeMobileDropdown === 0 ? 'show' : ''}`}>
-              <Link to="/about">About Us</Link>
-              <Link to="/team">Our Team</Link>
-              <Link to="/epc">EPC</Link>
-              <Link to="/approach">Our Approach</Link>
-              <Link to="/sustainability">Sustainability</Link>
-            </div>
-          </div>
-
-          <div className="mobile-dropdown">
-            <button className={`dropdown-btn ${activeMobileDropdown === 1 ? 'active' : ''}`} onClick={() => toggleMobileDropdown(1)}>
-              Services
-              <svg className="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div className={`dropdown-content ${activeMobileDropdown === 1 ? 'show' : ''}`}>
-              <Link to="/pharmaceuticals">Pharmaceuticals</Link>
-              <Link to="/biopharmaceuticals">Biopharmaceuticals</Link>
-              <Link to="/medical-devices">Medical Devices</Link>
-              <Link to="/cosmetics">Cosmetics</Link>
-              <Link to="/industrial-appliances">Industrial Appliances</Link>
-            </div>
-          </div>
-
-          <div className="mobile-dropdown">
-            <button className={`dropdown-btn ${activeMobileDropdown === 2 ? 'active' : ''}`} onClick={() => toggleMobileDropdown(2)}>
-              Socials
-              <svg className="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="6 9 12 15 18 9"></polyline>
-              </svg>
-            </button>
-            <div className={`dropdown-content ${activeMobileDropdown === 2 ? 'show' : ''}`}>
-              <a
-                href="https://www.linkedin.com/company/htlaircon/?originalSubdomain=in"
-                target="_blank"
-                rel="noopener noreferrer"
-                >LinkedIn</a
+          <Drawer.Root direction="right" open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <Drawer.Trigger asChild>
+              <button 
+                className={`mobile-menu-toggle ${isMobileMenuOpen ? 'active' : ''}`} 
+                id="mobileMenuToggle"
+                aria-label="Toggle navigation menu"
+                style={{ background: 'none', border: 'none', outline: 'none', cursor: 'pointer' }}
               >
-            </div>
-          </div>
+                <svg
+                  width="32"
+                  height="32"
+                  viewBox="0 0 56 46"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mobile-burger"
+                >
+                  <rect className="mobile-top" y="9" width="48" height="6" fill="white" />
+                  <rect className="mobile-bot" y="29" width="48" height="6" fill="white" />
+                </svg>
+              </button>
+            </Drawer.Trigger>
+
+            <Drawer.Portal>
+              <Drawer.Overlay className="fixed inset-0 z-[9999] bg-black/60 backdrop-blur-sm" />
+              <Drawer.Content className="fixed top-0 right-0 z-[10000] h-full w-[85%] max-w-[380px] bg-[#0d0d0d] text-white flex flex-col focus:outline-none outline-none border-l border-white/10 shadow-elevation-4">
+                <Drawer.Close asChild>
+                  <button 
+                    className="absolute top-5 right-6 w-10 h-10 flex items-center justify-center text-white/60 hover:text-white transition-colors"
+                    aria-label="Close menu"
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', outline: 'none' }}
+                  >
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </Drawer.Close>
+
+                <div className="flex flex-col h-full p-6 pt-24 overflow-y-auto">
+                  <Drawer.Title className="sr-only">Navigation Menu</Drawer.Title>
+                  <div className="mobile-menu active" style={{ display: 'flex', marginTop: 0, height: 'auto', paddingBottom: 0 }}>
+                    <div className="mobile-dropdown">
+                      <button className={`dropdown-btn ${activeMobileDropdown === 0 ? 'active' : ''}`} onClick={() => toggleMobileDropdown(0)}>
+                        Company
+                        <svg className="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </button>
+                      <div className={`dropdown-content ${activeMobileDropdown === 0 ? 'show' : ''}`}>
+                        <Link to="/about">About Us</Link>
+                        <Link to="/team">Our Team</Link>
+                        <Link to="/epc">EPC</Link>
+                        <Link to="/approach">Our Approach</Link>
+                        <Link to="/sustainability">Sustainability</Link>
+                      </div>
+                    </div>
+
+                    <div className="mobile-dropdown">
+                      <button className={`dropdown-btn ${activeMobileDropdown === 1 ? 'active' : ''}`} onClick={() => toggleMobileDropdown(1)}>
+                        Services
+                        <svg className="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </button>
+                      <div className={`dropdown-content ${activeMobileDropdown === 1 ? 'show' : ''}`}>
+                        <Link to="/pharmaceuticals">Pharmaceuticals</Link>
+                        <Link to="/biopharmaceuticals">Biopharmaceuticals</Link>
+                        <Link to="/medical-devices">Medical Devices</Link>
+                        <Link to="/cosmetics">Cosmetics</Link>
+                        <Link to="/industrial-appliances">Industrial Appliances</Link>
+                      </div>
+                    </div>
+
+                    <div className="mobile-dropdown">
+                      <button className={`dropdown-btn ${activeMobileDropdown === 2 ? 'active' : ''}`} onClick={() => toggleMobileDropdown(2)}>
+                        Socials
+                        <svg className="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                      </button>
+                      <div className={`dropdown-content ${activeMobileDropdown === 2 ? 'show' : ''}`}>
+                        <a
+                          href="https://www.linkedin.com/company/htlaircon/?originalSubdomain=in"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >LinkedIn</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Drawer.Content>
+            </Drawer.Portal>
+          </Drawer.Root>
         </div>
       </nav>
     </>

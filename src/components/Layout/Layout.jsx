@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import useSmoothScroll from '../../hooks/useSmoothScroll';
@@ -11,10 +10,16 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const LayoutContent = ({ children }) => {
   const { isContactOpen, closeContact } = useForm();
-  const { pathname } = useLocation();
+  const [pathname, setPathname] = useState(typeof window !== 'undefined' ? window.location.pathname : '');
   
   // Initialize Lenis
   useSmoothScroll();
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setPathname(window.location.pathname);
+    }
+  }, []);
 
   useEffect(() => {
     // Ensure scroll to top on route change

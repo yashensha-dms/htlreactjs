@@ -162,16 +162,6 @@ a.disabled:hover {
   overflow: hidden;
 }
 
-.mobile-navbar.menu-active {
-  position: fixed;
-  width: 100%;
-  background: var(--gray-primary);
-  padding: 16px 20px;
-  box-sizing: border-box;
-  overflow: hidden;
-  left: 0;
-}
-
 .mobile-nav-header {
   display: flex;
   align-items: center;
@@ -224,27 +214,12 @@ a.disabled:hover {
 }
 
 .mobile-menu {
-  display: none;
-  flex-direction: column;
-  width: 100%;
-  background-color: var(--gray-primary);
-  overflow-y: auto;
-  padding: 0;
-  position: relative;
-  z-index: 9998;
-  box-sizing: border-box;
-}
-
-.mobile-menu.active {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: calc(100vh - 110px);
-  margin-top: 10px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  background-color: var(--gray-primary);
+  position: relative;
   box-sizing: border-box;
-  padding-bottom: 40px;
 }
 
 .mobile-dropdown {
@@ -343,14 +318,6 @@ a.disabled:hover {
   .mobile-navbar {
     padding: 14px 16px;
     min-height: 65px;
-  }
-
-  .mobile-navbar.menu-active {
-    padding: 14px 16px;
-  }
-
-  .mobile-menu.active {
-    height: calc(100vh - 100px);
   }
 
   .dropdown-btn {
